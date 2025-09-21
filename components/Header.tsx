@@ -2,7 +2,8 @@
 'use client'
 
 import Link from 'next/link'
-import DarkModeToggle from '@components/DarkModeToggle'
+import DarkModeToggle from './DarkModeToggle'
+
 
 export default function Header() {
   return (
