@@ -1,20 +1,21 @@
 // components/Button.tsx
-interface ButtonProps {
-  children: React.ReactNode
-  onClick?: () => void
+import { ButtonHTMLAttributes, FC } from 'react'
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary'
 }
 
-export default function Button({ children, onClick, variant = 'primary' }: ButtonProps) {
-  const baseClasses = 'px-6 py-2 rounded font-semibold transition'
-  const variantClasses =
-    variant === 'primary'
-      ? 'bg-blue-600 text-white hover:bg-blue-700'
-      : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+const Button: FC<ButtonProps> = ({ children, variant = 'primary', ...props }) => {
+  const baseClasses = "px-4 py-2 rounded text-white"  // changed 'let' → 'const'
+  const variantClasses = variant === 'secondary'
+    ? 'bg-gray-500 hover:bg-gray-600'
+    : 'bg-blue-600 hover:bg-blue-700'               // changed 'let' → 'const'
 
   return (
-    <button className={`${baseClasses} ${variantClasses}`} onClick={onClick}>
+    <button {...props} className={`${baseClasses} ${variantClasses}`}>
       {children}
     </button>
   )
 }
+
+export default Button
