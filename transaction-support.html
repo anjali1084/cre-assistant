@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRE Digital Assistant - Transaction Support</title>
+  <link rel="stylesheet" href="./dist/output.css">
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow">
+    <h1 class="text-2xl font-bold">CRE Digital Assistant</h1>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="bg-white p-4 shadow flex space-x-4">
+    <a href="index.html" class="text-blue-600 hover:underline">Dashboard</a>
+    <a href="client-onboarding.html" class="text-blue-600 hover:underline">Client Onboarding</a>
+    <a href="property-management.html" class="text-blue-600 hover:underline">Property Management</a>
+    <a href="market-analysis.html" class="text-blue-600 hover:underline">Market Analysis</a>
+    <a href="transaction-support.html" class="text-blue-600 font-semibold">Transaction Support</a>
+    <a href="personalized-recommendations.html" class="text-blue-600 hover:underline">Recommendations</a>
+  </nav>
+
+  <main class="p-6 max-w-3xl mx-auto">
+
+    <!-- Document Upload -->
+    <div class="bg-white p-6 rounded shadow mb-6">
+      <h2 class="text-xl font-bold mb-4">Upload Transaction Documents</h2>
+      <form id="docForm" class="space-y-4">
+        <input type="file" id="fileInput" class="w-full p-2 border rounded" accept=".pdf,.doc,.docx" required>
+        <input type="text" id="docName" placeholder="Document Name" class="w-full p-2 border rounded" required>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Upload</button>
+      </form>
+      <ul id="docList" class="mt-4 space-y-2 text-gray-700"></ul>
+    </div>
+
+    <!-- Compliance Checklist -->
+    <div class="bg-white p-6 rounded shadow">
+      <h2 class="text-xl font-bold mb-4">Compliance Checklist</h2>
+      <ul class="space-y-2 text-gray-700">
+        <li><input type="checkbox" class="mr-2">Verify property ownership</li>
+        <li><input type="checkbox" class="mr-2">Check client documents</li>
+        <li><input type="checkbox" class="mr-2">Prepare contract</li>
+        <li><input type="checkbox" class="mr-2">Sign agreement</li>
+        <li><input type="checkbox" class="mr-2">Payment verification</li>
+      </ul>
+    </div>
+
+  </main>
+
+  <footer class="bg-gray-200 text-gray-700 p-4 text-center mt-6">
+    &copy; 2025 CRE Digital Assistant. All rights reserved.
+  </footer>
+
+  <script>
+    const docForm = document.getElementById("docForm");
+    const docList = document.getElementById("docList");
+    const storedDocs = JSON.parse(localStorage.getItem("documents") || "[]");
+
+    // Display saved documents
+    storedDocs.forEach(doc => addDocToUI(doc));
+
+    docForm.addEventListener("submit", function(e){
+      e.preventDefault();
+      const fileInput = document.getElementById("fileInput");
+      const docName = document.getElementById("docName").value;
+
+      if(fileInput.files.length === 0) return alert("Please select a file");
+
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function(e){
+        const docData = {
+          name: docName,
+          fileName: file.name,
+          content: e.target.result
+        };
+        storedDocs.push(docData);
+        localStorage.setItem("documents", JSON.stringify(storedDocs));
+        addDocToUI(docData);
+        docForm.reset();
+        alert("Document uploaded successfully!");
+      };
+
+      reader.readAsDataURL(file); // store as base64 for demo
+    });
+
+    function addDocToUI(doc){
+      const li = document.createElement("li");
+      li.className = "border p-2 rounded bg-gray-50";
+      li.innerHTML = `<strong>${doc.name}</strong> (${doc.fileName})`;
+      docList.appendChild(li);
+    }
+  </script>
+
+</body>
+</html>

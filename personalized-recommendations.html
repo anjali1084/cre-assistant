@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRE Digital Assistant - Recommendations</title>
+  <link rel="stylesheet" href="./dist/output.css">
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 shadow">
+    <h1 class="text-2xl font-bold">CRE Digital Assistant</h1>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="bg-white p-4 shadow flex space-x-4">
+    <a href="index.html" class="text-blue-600 hover:underline">Dashboard</a>
+    <a href="client-onboarding.html" class="text-blue-600 hover:underline">Client Onboarding</a>
+    <a href="property-management.html" class="text-blue-600 hover:underline">Property Management</a>
+    <a href="market-analysis.html" class="text-blue-600 hover:underline">Market Analysis</a>
+    <a href="transaction-support.html" class="text-blue-600 hover:underline">Transaction Support</a>
+    <a href="personalized-recommendations.html" class="text-blue-600 font-semibold">Recommendations</a>
+  </nav>
+
+  <main class="p-6 max-w-4xl mx-auto">
+
+    <!-- Client Selection -->
+    <div class="bg-white p-6 rounded shadow mb-6">
+      <h2 class="text-xl font-bold mb-4">Select Client</h2>
+      <select id="clientSelect" class="w-full p-2 border rounded">
+        <option value="">-- Choose a client --</option>
+      </select>
+    </div>
+
+    <!-- Recommendations -->
+    <div id="recommendationList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+  </main>
+
+  <footer class="bg-gray-200 text-gray-700 p-4 text-center mt-6">
+    &copy; 2025 CRE Digital Assistant. All rights reserved.
+  </footer>
+
+  <script>
+    const clients = JSON.parse(localStorage.getItem("clients") || "[]");
+    const properties = JSON.parse(localStorage.getItem("properties") || "[]");
+
+    const clientSelect = document.getElementById("clientSelect");
+    const recommendationList = document.getElementById("recommendationList");
+
+    // Populate client dropdown
+    clients.forEach((client, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.textContent = `${client.name} (${client.email})`;
+      clientSelect.appendChild(option);
+    });
+
+    // Event listener for client selection
+    clientSelect.addEventListener("change", function() {
+      recommendationList.innerHTML = "";
+      const selectedClient = clients[this.value];
+      if(!selectedClient) return;
+
+      // Filter properties based on simple criteria (example: price < $1000000)
+      const recommended = properties.filter(p => p.price <= 1000000);
+
+      if(recommended.length === 0) {
+        recommendationList.innerHTML = `<p class="text-gray-700">No recommendations available for this client.</p>`;
+        return;
+      }
+
+      // Display recommendations
+      recommended.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "bg-white p-4 rounded shadow";
+        card.innerHTML = `
+          <h3 class="text-lg font-semibold">${p.name}</h3>
+          <p class="text-gray-700">${p.location}</p>
+          <p class="text-gray-900 font-bold">$${p.price}</p>
+          <p class="text-gray-600 mt-2">${p.description}</p>
+        `;
+        recommendationList.appendChild(card);
+      });
+    });
+  </script>
+
+</body>
+</html>
